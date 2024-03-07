@@ -23,7 +23,7 @@ jobs:
 
       - name: Set Environment Variables for Production
         run: |
-          echo "REGION=<your-production-region>" >> $GITHUB_ENV
+          echo "REGION=us-central1" >> $GITHUB_ENV
           echo "CLUSTER=scooter-app-p" >> $GITHUB_ENV
           echo "NAMESPACE=blue" >> $GITHUB_ENV  # or "green"
           echo "IMAGE_TAG=production" >> $GITHUB_ENV
