@@ -1,0 +1,32 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+
+  build-and-deploy-production:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up GCP Service Account
+        uses: google-github-actions/setup-gcloud@v0.5.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Set Environment Variables for Production
+        run: |
+          echo "REGION=<your-production-region>" >> $GITHUB_ENV
+          echo "CLUSTER=scooter-app-p" >> $GITHUB_ENV
+          echo "NAMESPACE=blue" >> $GITHUB_ENV  # or "green"
+          echo "IMAGE_TAG=production" >> $GITHUB_ENV
+
+      - name: Submit Cloud Build for Production
+        run: gcloud builds submit --config cloudbuild.yaml .
